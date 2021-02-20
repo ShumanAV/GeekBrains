@@ -1,7 +1,7 @@
 package Lesson_01;
 
 public class Lesson_01 {
-    //Версия 1.0.1
+    //Версия 1.0.2
 
     public static void main(String[] args) {
         /*Создать переменные всех пройденных типов данных и инициализировать их значения.*/
