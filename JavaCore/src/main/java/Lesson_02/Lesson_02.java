@@ -1,9 +1,9 @@
 package Lesson_02;
 
 import java.util.Arrays;
-    //Версия 1.0.0
 
 public class Lesson_02 {
+    //Версия 1.0.0
 
     public static void main(String[] args) {
 
@@ -41,7 +41,7 @@ public class Lesson_02 {
         }
 
         //5. ** Задать одномерный массив и найти в нем минимальный и максимальный элементы (без помощи интернета);
-        int[] arrayInt_5 = {5, 3, 2, 4, -1, 6, 7, 15, 0, 1, 2, -8};
+        int[] arrayInt_5 = {-5, -3, -2, -4, -1, -6, -7, -15, -1, -2, -8};
         System.out.println("Минимальное значение массива " + arrayMin(arrayInt_5));
         System.out.println("Максимальное значение массива " + arrayMax(arrayInt_5));
 
@@ -72,7 +72,7 @@ public class Lesson_02 {
     }
 
     private static int arrayMax(int[] arr) {
-        int max = 0;
+        int max = arr[0];
         for (int i = 0; i < arr.length; i++) {
             if (max < arr[i])
                 max = arr[i];
