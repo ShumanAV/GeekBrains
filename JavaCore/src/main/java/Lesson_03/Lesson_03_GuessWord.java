@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Lesson_03_GuessWord {
-    //Версия 1.0.0
+    //Версия 1.0.1
 
     public static void main(String[] args) {
 
@@ -25,19 +25,20 @@ public class Lesson_03_GuessWord {
                 "leak", "kiwi", "mango", "mushroom", "nut", "olive", "pea", "peanut", "pear", "pepper", "pineapple", "pumpkin", "potato"};
         Random random = new Random();
         int secretX = random.nextInt(words.length - 1);
+        String secretWord = words[secretX];
         Scanner sc = new Scanner(System.in);
         System.out.println("Добро пожаловать в игру Угадай слово, ваш ответ?");
 
         while (true) {
             String userAnswer = sc.nextLine();
-            if (words[secretX].equals(userAnswer) == true) {
+            if (secretWord.equals(userAnswer)) {
                 System.out.println("Поздравляем, вы угадали слово!");
                 break;
             } else {
                 userAnswer = fillСhar(userAnswer);
                 String word = "";
-                for (int i = 0; i < words[secretX].length(); i++) {
-                    if (words[secretX].charAt(i) == userAnswer.charAt(i)) {
+                for (int i = 0; i < secretWord.length(); i++) {
+                    if (secretWord.charAt(i) == userAnswer.charAt(i)) {
                         word += userAnswer.charAt(i);
                     } else {
                         word += "#";
