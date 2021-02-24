@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Lesson_03 {
-    //Версия 1.0.0
+    //Версия 1.0.1
 
     static Scanner sc = new Scanner(System.in);
 
@@ -20,15 +20,13 @@ public class Lesson_03 {
         while (i < numberAttempts + 2) {
 
             i++;
-            switch (i) {
-                case 1:
-                    secretNumber = random.nextInt(9);
-                    System.out.println("Добро пожаловать в игру Угадай число от 0 до 9, у вас есть количество попыток " + numberAttempts);
-                    break;
-                case 4:
-                    System.out.println("Вы не угадали число " + secretNumber);
-                    i = repeatGame();
-                    continue;
+            if (i == 1) {
+                secretNumber = random.nextInt(10);
+                System.out.println("Добро пожаловать в игру Угадай число от 0 до 9, у вас есть количество попыток " + numberAttempts);
+            } else if (i == numberAttempts + 1) {
+                System.out.println("Вы не угадали число " + secretNumber);
+                i = repeatGame();
+                continue;
             }
 
             int userNumber = sc.nextInt();
@@ -37,7 +35,7 @@ public class Lesson_03 {
             } else if (userNumber < secretNumber){
                 System.out.println("Загаданное число больше вашего, у вас осталось попыток " + (numberAttempts - i));
             } else {
-                System.out.println("Поздравляем, вы угадали число " + secretNumber + " c " + i + " попытки");
+                System.out.printf("Поздравляем, вы угадали число %d c %d попытки %n", secretNumber, i);
                 i = repeatGame();
             }
         }
