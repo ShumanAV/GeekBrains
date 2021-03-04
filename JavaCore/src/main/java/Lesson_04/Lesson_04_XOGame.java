@@ -5,18 +5,24 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Lesson_04_XOGame {
-    //версия 1.0.0
+    //версия 1.0.1
 
-    public static final int SIZE = 4;           //размер игрового поля, можно ставить любое число
-    public static final int DOTS_TO_WIN = SIZE;    //кол-во фишек для выигрыша, по умолчанию равно размеру поля, оптимальное значение
+    public static final int SIZE = 3;                         //размер игрового поля, можно ставить любое число
+    public static final int DOTS_TO_WIN = SIZE;               //кол-во фишек для выигрыша, по умолчанию равно размеру поля, оптимальное значение
     public static final int MIN_X = DOTS_TO_WIN - 1;          //мин число фишек игрока, когда аи начинает их блокировать, по умолчанию равно кол-ву фишек для выигрыша - 1
     public static final int MIN_O = DOTS_TO_WIN - 1;          //мин кол-во фишек аи, когда аи начинает достраивать линию для победы
-    public static char[][] gameField = new char[SIZE][SIZE];    //игровое поле
+
+    public static char[][] gameField = new char[SIZE][SIZE];   //игровое поле
     public static final char DOT_EMPTY = '•';
     public static final char DOT_X = 'X';
     public static final char DOT_O = 'O';
-    public static int[][] arrAiTurns = new int[SIZE * 3][3];  //массив для возможных ходов аи
-    public static int numberAiTurns = 0;        //кол-во возможных ходов аи
+    public static int[][] arrAiTurns = new int[SIZE * 3][3];   //массив для возможных ходов аи
+    public static int numberAiTurns = 0;                       //кол-во возможных ходов аи
+
+    private static final int MODE_SEARCH_LINE = 1;             //режимы поиска: 1 - строки, 2 - столбцы, 3 - левая диагональ, 4 - правая диагональ
+    private static final int MODE_SEARCH_ROW = 2;
+    private static final int MODE_SEARCH_LEFT = 3;
+    private static final int MODE_SEARCH_RIGHT = 4;
 
     public static void main(String[] args) {
 
@@ -44,12 +50,9 @@ public class Lesson_04_XOGame {
     private static void printMassive(){
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                if (j < gameField.length - 1) {
-                    System.out.printf("%3s", gameField[i][j]);
-                } else {
-                    System.out.printf("%3s\n", gameField[i][j]);
-                }
+                System.out.printf("%3s", gameField[i][j]);
             }
+            System.out.println();
         }
     }
 
@@ -105,13 +108,7 @@ public class Lesson_04_XOGame {
     }
 
     private static boolean checkEndGame(){
-        if (checkWin(DOT_X)) {
-            return true;
-        }
-        if (checkWin(DOT_O)) {
-            return true;
-        }
-        if (checkDraw(DOT_EMPTY)) {
+        if (checkWin(DOT_X) || checkWin(DOT_O) || checkDraw(DOT_EMPTY)) {
             return true;
         }
         return false;
@@ -124,9 +121,10 @@ public class Lesson_04_XOGame {
         for (int i = 0; i < SIZE; i++) {  //проверяем строки
             numberXO = 0;
             for (int j = 0; j < SIZE; j++) {
-                if (gameField[i][j] == symbol){
-                    numberXO += 1;
+                if (gameField[i][j] != symbol){
+                    break;
                 }
+                numberXO += 1;
             }
             endGame = checkWhoWin(numberXO, DOTS_TO_WIN, symbol);
             if (endGame) {
@@ -138,9 +136,10 @@ public class Lesson_04_XOGame {
             for (int i = 0; i < SIZE; i++) {
                 numberXO = 0;
                 for (int j = 0; j < SIZE; j++) {
-                    if (gameField[j][i] == symbol) {
-                        numberXO += 1;
+                    if (gameField[j][i] != symbol) {
+                        break;
                     }
+                    numberXO += 1;
                 }
                 endGame = checkWhoWin(numberXO, DOTS_TO_WIN, symbol);
                 if (endGame) {
@@ -184,23 +183,23 @@ public class Lesson_04_XOGame {
     }
 
     private static boolean checkWhoWin(int numberXO, int numberXONeed, char symbol) {
-        if (numberXO == numberXONeed){
-            printMassive();
-            if (symbol == DOT_X) {
-                System.out.println("Поздравляем, вы победили!");
-            } else if (symbol == DOT_O){
-                System.out.println("Победил исскуственный интеллект!");
-            } else
-                System.out.println("Ничья, победила дружба!");
-            return true;
+        if (numberXO != numberXONeed) {
+            return false;
         }
-        return false;
+        printMassive();
+        if (symbol == DOT_X) {
+            System.out.println("Поздравляем, вы победили!");
+        } else if (symbol == DOT_O){
+            System.out.println("Победил исскуственный интеллект!");
+        } else {
+            System.out.println("Ничья, победила дружба!");
+        }
+        return true;
     }
 
     private static void checkMin_XO(char symbol, int min_xo){
 
-        int numberXO;
-        int modeSearch = 1;     //1 - строки, 2 - столбцы, 3 - левая диагональ, 4 - правая диагональ
+        int numberXO;           //1 - строки, 2 - столбцы, 3 - левая диагональ, 4 - правая диагональ
         for (int i = 0; i < SIZE; i++) {        //проверяем строки
             numberXO = 0;
             for (int j = 0; j < SIZE; j++) {
@@ -208,13 +207,12 @@ public class Lesson_04_XOGame {
                     numberXO += 1;
                 }
                 if (numberXO == min_xo) {
-                    choiceAiTurns(i, modeSearch);
+                    choiceAiTurns(i, MODE_SEARCH_LINE);
                     break;
                 }
             }
         }
 
-        modeSearch = 2;
         for (int i = 0; i < SIZE; i++) {    //проверяем колонки
             numberXO = 0;
             for (int j = 0; j < SIZE; j++) {
@@ -222,34 +220,30 @@ public class Lesson_04_XOGame {
                     numberXO += 1;
                 }
                 if (numberXO == min_xo) {
-                    choiceAiTurns(i, modeSearch);
+                    choiceAiTurns(i, MODE_SEARCH_ROW);
                     break;
                 }
             }
         }
 
-
-        modeSearch = 3;
         numberXO = 0;
         for (int i = 0; i < SIZE; i++) {    //проверяем левую диагональ
             if (gameField[i][i] == symbol) {
                 numberXO += 1;
             }
             if (numberXO == min_xo) {
-                choiceAiTurns(i, modeSearch);
+                choiceAiTurns(i, MODE_SEARCH_LEFT);
                 break;
             }
         }
 
-
-        modeSearch = 4;
         numberXO = 0;
         for (int i = 0; i < SIZE; i++) {    //проверяем правую диагональ
             if (gameField[i][gameField.length - i - 1] == symbol) {
                 numberXO += 1;
             }
             if (numberXO == min_xo) {
-                choiceAiTurns(i, modeSearch);
+                choiceAiTurns(i, MODE_SEARCH_RIGHT);
                 break;
             }
         }
@@ -258,7 +252,7 @@ public class Lesson_04_XOGame {
 
     private static void choiceAiTurns(int i, int modeSearch){
         switch (modeSearch){
-            case 1:     //строки
+            case MODE_SEARCH_LINE:     //строки
                 for (int j = 0; j < SIZE; j++) {
                     if (gameField[i][j] == DOT_EMPTY) {
                         writeArrAiTurns(i, j);
@@ -266,7 +260,7 @@ public class Lesson_04_XOGame {
                     }
                 }
                 break;
-            case 2:     //столбцы
+            case MODE_SEARCH_ROW:     //столбцы
                 for (int j = 0; j < SIZE; j++) {
                     if (gameField[j][i] == DOT_EMPTY) {
                         writeArrAiTurns(j, i);
@@ -274,7 +268,7 @@ public class Lesson_04_XOGame {
                     }
                 }
                 break;
-            case 3:     //левая диагональ
+            case MODE_SEARCH_LEFT:     //левая диагональ
                 for (int j = 0; j < SIZE; j++) {
                     if (gameField[j][j] == DOT_EMPTY) {
                         writeArrAiTurns(j, j);
@@ -282,7 +276,7 @@ public class Lesson_04_XOGame {
                     }
                 }
                 break;
-            case 4:     //правая диагональ
+            case MODE_SEARCH_RIGHT:     //правая диагональ
                 for (int j = 0; j < SIZE; j++) {
                     if (gameField[j][gameField.length - j - 1] == DOT_EMPTY) {
                         writeArrAiTurns(j, gameField.length - j - 1);
