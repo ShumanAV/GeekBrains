@@ -1,7 +1,7 @@
 package Lesson_06;
 
 public class App {
-    //версия 1.0.1
+    //версия 1.0.2
 
     public static void main(String[] args) {
 
