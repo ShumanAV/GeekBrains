@@ -1,7 +1,7 @@
 package Lesson_07;
 
 public class App {
-    //ver 1.0.0
+    //ver 1.0.1
 
     public static void main(String[] args) {
 
@@ -15,7 +15,7 @@ public class App {
 
         for (int i = 0; i < cat.length; i++) {
             cat[i].eat(plate);
-            System.out.printf("Кот - %s, сытый - %b\n", cat[i].getName(), cat[i].getFull());
+            cat[i].info(cat[i].getName(), cat[i].isFull());
         }
         plate.info();
 

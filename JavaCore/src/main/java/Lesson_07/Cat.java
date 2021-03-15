@@ -11,6 +11,10 @@ public class Cat {
         this.appetite = appetite;
     }
 
+    public void info(String name, boolean full) {
+        System.out.printf("Кот - %s, сытый - %b\n", name, full);
+    }
+
     public void eat(Plate p) {
         full = p.decreaseFood(appetite);
     }
@@ -19,7 +23,7 @@ public class Cat {
         return name;
     }
 
-    public boolean getFull() {
+    public boolean isFull() {
         return full;
     }
 
